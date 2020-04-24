@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<nav class="navbar navbar-light bg-light">
+    <h1>ПЯЛ</h1>
+    {% if current_user.is_authenticated %}
+    <div class="btn-group">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {{ current_user.login }}
+    </button>
+    <div class="dropdown-menu dropdown-menu-right">
+        <a class="dropdown-item" href="/user/{{ current_user.id }}">Моя страница</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="/edit">Редактировать</a>
+        <a class="dropdown-item" href="/settings">Настройки</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="/logout">Выйти</a>
+    </div>
+    <img width="50px" height="50px" src="/static/img/{{ current_user.avatar_photo_id }}.jpg">
+    </div>
+
+    {% else %}
+    <p>
+        <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
+        <a class="btn btn-success" href="/login">Войти</a>
+    </p>
+    {% endif %}
+</nav>
+<h4>Общайся, прогай, развивайся!</h4>
+<main role="main" class="container">
+    {% block content %}{% endblock %}
+</main>
+</body>
+</html>

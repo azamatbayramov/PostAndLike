@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ user.login }}</h2>
+<div>
+    <img style="width:200px; height:200px; border-radius: 30px; float: left"
+         src="/static/img/{{ user.avatar_photo_id }}.jpg">
+    {% if user.private_account %}
+        {% if user.id == current_user.id %}
+            {% set info_available = True %}
+        {% else %}
+            {% if current_user in user.subscribers %}
+                {% set info_available = True %}
+            {% else %}
+                {% set info_available = False %}
+            {% endif %}
+        {% endif %}
+    {% else %}
+        {% set info_available = True %}
+    {% endif %}
+
+    {% if info_available %}
+        <div style="margin-left: 50px; margin-right: 50px; float: left;">
+            <h2 align="center">
+                <a href="/subscribers/{{ user.id }}/1" style="text-decoration:none;">{{ user.subscribers|list|length }}</a>
+            </h2>
+            <h3 align="center">
+                <a href="/subscribers/{{ user.id }}/1" style="text-decoration:none;">подписчиков</a>
+            </h3>
+        </div>
+        <div style="margin-left: 25px; margin-right: 50px;">
+            <h2 align="center">
+                <a href="/subscriptions/{{ user.id }}/1" style="text-decoration:none;">{{ user.subscriptions|list|length }}</a>
+            </h2>
+            <h3 align="center">
+                <a href="/subscriptions/{{ user.id }}/1" style="text-decoration:none;">подписок</a>
+            </h3>
+        </div>
+    {% else %}
+        <div style="margin-left: 50px; margin-right: 50px; float: left;">
+            <h2 align="center">{{ user.subscribers|list|length }}</h2>
+            <h3 align="center">подписчиков</h3>
+        </div>
+        <div style="margin-left: 25px; margin-right: 50px;">
+            <h2 align="center">{{ user.subscriptions|list|length }}</h2>
+            <h3 align="center">подписок</h3>
+        </div>
+    {% endif %}
+</div>
+
+<h4>{{ user.description }}</h4>
+
+{% if user.id == current_user.id %}
+    <a class="btn btn-primary" href="/edit" role="button">Редактировать</a>
+    <a class="btn btn-primary" href="/settings" role="button">Настройки</a>
+{% else %}
+    {% if user.private_account %}
+        {% if user in current_user.subscriptions %}
+            <a class="btn btn-primary" href="/cancel_subscription/{{ user.id }}" role="button">Отписаться</a>
+        {% elif user in current_user.requested_subscriptions %}
+            <a class="btn btn-primary" href="/cancel_subscription/{{ user.id }}" role="button">Отменить запрос</a>
+        {% else %}
+            <a class="btn btn-primary" href="/subscribe/{{ user.id }}" role="button">Подписаться</a>
+        {% endif %}
+    {% else %}
+        {% if user in current_user.subscriptions %}
+            <a class="btn btn-primary" href="/cancel_subscription/{{ user.id }}" role="button">Отписаться</a>
+        {% else %}
+            <a class="btn btn-primary" href="/subscribe/{{ user.id }}" role="button">Подписаться</a>
+        {% endif %}
+    {% endif %}
+{% endif %}
+
+
+
+{% endblock %}

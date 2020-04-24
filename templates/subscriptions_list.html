@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Подписки пользователия {{ user.login }}</h2>
+<table class="table">
+    <tbody>
+    {% for i in subscriptions %}
+    <tr>
+        {% if i.avatar_photo_id != 0 %}
+            <td><img src='/static/img/{{ i.avatar_photo_id }}.jpg' style="width:50px; height:50px; float: left"></td>
+        {% endif %}
+        <td><a href="/user/{{ i.id }}">{{ i.login }}</a></td>
+        {% if user.id == current_user.id %}
+        <td><a class="btn btn-primary" href="/cancel_subscription?id={{ i.id }}&back_url=/subscriptions/{{ current_user.id }}/{{page_info.page_number}}" role="button">Отписаться</a></td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% if page_info.pages_count != 1 %}
+{% if page_info.page_number != 1 %}
+<a class="btn btn-primary" href="/subscriptions/{{user.id}}/{{page_info.page_number - 1}}" role="button">Предыдущая страница</a>
+{%endif%}
+{%if page_info.page_number != page_info.pages_count%}
+<a class="btn btn-primary" href="/subscriptions/{{user.id}}/{{page_info.page_number + 1}}" role="button">Следующая страница</a>
+{%endif%}
+{%endif%}
+{% endblock %}
