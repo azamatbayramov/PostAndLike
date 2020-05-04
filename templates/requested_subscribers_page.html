@@ -2,14 +2,9 @@
 
 {% block content %}
 
-{% if user.id == current_user.id %}
-<h2 class="text-light" style="margin-bottom: 20px">Мои подписки</h2>
-{% else %}
-<h2 class="text-light" style="margin-bottom: 20px">Подписки пользователя {{ user.login }}</h2>
-{% endif %}
+<h2 class="text-light" style="margin-bottom: 20px">Мои запрошенные подписчики</h2>
 
-{% for i in subscriptions %}
-
+{% for i in subscribers %}
     <div class="card bg-dark border-light" style="margin-bottom: 10px">
         <div class="row">
             <div class="col">
@@ -20,7 +15,7 @@
             </div>
             <div class="col">
                 {% if user.id == current_user.id %}
-                    <a class="btn btn-outline-light float-right" href="/cancel_subscription?user_id={{ i.id }}&back_url=/subscriptions/{{ current_user.id }}/{{page_info.page_number}}" role="button">Отписаться</a>
+                    <a class="btn btn-outline-light float-right" href="/accept_subscriber?user_id={{ i.id }}&back_url=/subscribers/{{ current_user.id }}/{{page_info.page_number}}" role="button">Принять</a>
                 {% endif %}
             </div>
         </div>
@@ -29,17 +24,17 @@
 {% endfor %}
 
 {% if page_info.pages_count > 1 %}
-    <div class="row" >
+    <div class="row">
         {% if page_info.page_number != 1 %}
             <div class="col">
-                <a class="btn btn-outline-light" href="/subscriptions/{{user.id}}/{{page_info.page_number - 1}}" role="button">Предыдущая страница</a>
+                <a class="btn btn-outline-light" href="/subscribers/{{user.id}}/{{page_info.page_number - 1}}" role="button">Предыдущая страница</a>
             </div>
         {%endif%}
 
         {%if page_info.page_number < page_info.pages_count%}
             <div style="float: right">
                 <div class="col">
-                    <a class="btn btn-outline-light" href="/subscriptions/{{user.id}}/{{page_info.page_number + 1}}" role="button">Следующая страница</a>
+                    <a class="btn btn-outline-light" href="/subscribers/{{user.id}}/{{page_info.page_number + 1}}" role="button">Следующая страница</a>
                 </div>
             </div>
         {%endif%}

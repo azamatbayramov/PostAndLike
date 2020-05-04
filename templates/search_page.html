@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="text-light" align="center">Поиск</h1>
+
+<form action="" method="post" novalidate>
+    <div>
+        {{ form.csrf_token }}
+    </div>
+    <div class="row">
+    {% for field in form if field.name != 'csrf_token' and field.name != 'submit' and field.name != 'remember_me' %}
+        <div class="col">
+            <p class="text-light">
+                {{ field.label }}<br>
+                {{ field(class="form-control bg-dark text-light") }}<br>
+
+                {% for error in field.errors %}
+                    {% include 'error_alert.html' %}
+                {% endfor %}
+            </p>
+        </div>
+    {% endfor %}
+    </div>
+    {% if error %}
+        {% include 'error_alert.html' %}
+    {% endif %}
+
+    <p>{{ form.submit(type="submit", class="btn btn-outline-light") }}</p>
+</form>
+
+{% if search_results != [] %}
+    {% for i in search_results %}
+        <div class="card bg-dark border-light" style="margin-bottom: 10px">
+            <div class="row">
+                <div class="col">
+                    <a href="/user/{{ i.id }}"><img src='/static/img/{{ i.avatar_photo_id }}.jpg' style="width:50px; height:50px; float: left"></a>
+                </div>
+                <div class="col">
+                    <a href="/user/{{ i.id }}" style="text-decoration: none;" class="text-light"><h2>{{ i.login }}</h2></a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <h2 class="text-light" align="center">Никого не найдено</h2>
+{%endif%}
+
+{% endblock %}

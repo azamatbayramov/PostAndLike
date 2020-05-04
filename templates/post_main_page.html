@@ -1,0 +1,51 @@
+<div style="padding-bottom: 20px">
+    <div class="card bg-dark text-white border-white">
+        <div class="card-header border-white">
+            <div class="row">
+                <div class="col">
+                    <a href="/user/{{ post.author.id }}"><img style="width:40px; border-radius: 5px; height:40px; float: left" src="/static/img/{{ post.author.avatar_photo_id }}.jpg"></a>
+                    <a href="/user/{{ post.author.id }}" style="text-decoration: none"><h4 class="text-light" style="margin-left: 50px;">{{ post.author.login }}</h4></a>
+                </div>
+
+                <div class="col">
+                    <div style="float: right">
+                        <div class="row">
+                            <div style="float: right">
+                                <div class="col">
+                                    <p>{{ post.creating_date_norm_view }}</p>
+                                </div>
+                            </div>
+
+                        {% if post.author.id == current_user.id%}
+                            <div class="col">
+                                <div style="float: right">
+                                    <button type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">⚙</button>
+
+                                    <div class="dropdown-menu dropdown-menu-right bg-dark border border-light">
+                                        <a href="/edit_post/{{ post.id }}?back_url=/posts/{{ page_info.page_number }}" class="btn dropdown-item text-light">Редактировать</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a href="/delete_post?post_id={{ post.id }}&back_url=/posts/{{ page_info.page_number }}" class="btn dropdown-item text-light">Удалить</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            {% if post.title %}
+            <h5>{{ post.title }}</h5>
+            {% endif %}
+
+            <p class="card-text">{{ post.text }}</p>
+
+            {% if current_user in post.liked_users %}
+                <a href="/set_like?set=off&post_id={{ post.id }}&back_url=/posts/{{ page_info.page_number }}" class="btn btn-danger">{{ post.liked_users|list|length }} ♥</a>
+            {% else %}
+                <a href="/set_like?set=on&post_id={{ post.id }}&back_url=/posts/{{ page_info.page_number }}" class="btn btn-outline-light">{{ post.liked_users|list|length }} ♥</a>
+            {% endif %}
+        </div>
+    </div>
+</div>

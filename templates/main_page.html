@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+    {% if posts_list|list|length != 0 %}
+    <div class="col">
+        <div style="float: right">
+            <div class="dropdown" style="padding: 20px 0px 10px 0px">
+              <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Сортировка</button>
+              <div class="dropdown-menu bg-dark text-light border-light" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item text-light" href="/set_sort_post_mode?type=1&back_url=/">Сначала новые</a>
+                <a class="dropdown-item text-light" href="/set_sort_post_mode?type=2&back_url=/">Сначала старые</a>
+                <a class="dropdown-item text-light" href="/set_sort_post_mode?type=3&back_url=/">Сначала залайканные</a>
+              </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% for post in posts_list %}
+    {% include 'post_main_page.html' %}
+{% endfor %}
+
+{% if page_info.pages_count > 1 %}
+    <div class="row">
+        {% if page_info.page_number != 1 %}
+            <div class="col">
+                <a class="btn btn-outline-light" href="/posts/{{page_info.page_number - 1}}" role="button">Предыдущая страница</a>
+            </div>
+        {%endif%}
+
+        {%if page_info.page_number < page_info.pages_count%}
+            <div style="float: right">
+                <div class="col">
+                    <a class="btn btn-outline-light" href="/posts/{{page_info.page_number + 1}}" role="button">Следующая страница</a>
+                </div>
+            </div>
+        {%endif%}
+    </div>
+{%endif%}
+
+
+{% endblock %}

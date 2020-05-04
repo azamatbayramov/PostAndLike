@@ -26,13 +26,6 @@ subscribers_list_table = sqlalchemy.Table(
     sqlalchemy.Column('subscriber_id', sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id'))
 )
 
-new_requested_subscribers_list_table = sqlalchemy.Table(
-    'new_requested_subscribers',
-    SqlAlchemyBase.metadata,
-    sqlalchemy.Column('user_id', sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id')),
-    sqlalchemy.Column('subscriber_id', sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id'))
-)
-
 requested_subscribers_list_table = sqlalchemy.Table(
     'requested_subscribers',
     SqlAlchemyBase.metadata,
@@ -49,6 +42,8 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     hashed_password = sqlalchemy.Column(sqlalchemy.String)
     registration_date = sqlalchemy.Column(sqlalchemy.DateTime)
     description = sqlalchemy.Column(sqlalchemy.String, default='')
+    posts = orm.relation("Post", back_populates='author')
+    liked_posts = orm.relation("Post", back_populates='liked_users')
 
     subscriptions = orm.relation(
         'User',
@@ -71,14 +66,6 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
         secondary=subscribers_list_table,
         primaryjoin=(subscribers_list_table.c.user_id == id),
         secondaryjoin=(subscribers_list_table.c.subscriber_id == id),
-        lazy='dynamic'
-    )
-
-    new_requested_subscribers = orm.relation(
-        'User',
-        secondary=new_requested_subscribers_list_table,
-        primaryjoin=(new_requested_subscribers_list_table.c.user_id == id),
-        secondaryjoin=(new_requested_subscribers_list_table.c.subscriber_id == id),
         lazy='dynamic'
     )
 

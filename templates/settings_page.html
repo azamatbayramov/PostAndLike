@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 align="center" class="text-white">Настройки аккаунта</h1>
+<a class="btn btn-outline-light" href='/user/{{ current_user.id }}/1'>Назад</a>
+<div style="padding: 20px 20px 20px 20px"></div>
+<a class="btn btn-outline-light" href="/change_password" role="button">Сменить пароль</a>
+<div style="padding: 10px 10px 10px 10px"></div>
+{% if current_user.private_account %}
+<h3 class="text-white">Ваш аккаунт закрытый</h3>
+<a class="btn btn-outline-light" href="/change_private?private=off&back_url=/settings" role="button">Сделать открытым</a>
+{% else %}
+<h3 class="text-white">Ваш аккаунт открытый</h3>
+<a class="btn btn-outline-light" href="/change_private?private=on&back_url=/settings" role="button">Сделать закрытым</a>
+{% endif %}
+{% endblock %}

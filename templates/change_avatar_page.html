@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="text-light" align="center">Редактирование аватарки</h1>
+<a class="btn btn-outline-light" href='/edit_account' style="margin-bottom: 40px">Назад</a>
+<form method="post" enctype="multipart/form-data">
+    <div>
+        {{ form.csrf_token }}
+    </div>
+
+    <p class="text-light">
+        {{ form.file.label }}<br>
+        {{ form.file() }}<br>
+
+        {% for error in form.file.errors %}
+            {% include 'error_alert.html' %}
+        {% endfor %}
+    </p>
+
+    {% if error %}
+        {% include 'error_alert.html' %}
+    {% endif %}
+
+    <p>{{ form.submit(type="submit", class="btn btn-outline-light") }}</p>
+</form>
+{% endblock %}

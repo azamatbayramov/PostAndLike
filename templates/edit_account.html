@@ -1,15 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 align="center" class="text-light">Регистрация</h1>
-
+<h1 class="text-light" align="center">Редактирование аккаунта</h1>
+<a class="btn btn-outline-light" href='/my_user' style="margin-bottom: 40px">Назад</a>
+<a class="btn btn-outline-light" href='/change_avatar' style="margin-bottom: 40px">Сменить аватарку</a>
 <form action="" method="post" novalidate>
-    <div>{{ form.csrf_token }}</div>
+    <div>
+        {{ form.csrf_token }}
+    </div>
 
     {% for field in form if field.name != 'csrf_token' and field.name != 'submit' %}
         <p class="text-light">
             {{ field.label }}<br>
             {{ field(class="form-control bg-dark text-light") }}<br>
+
             {% for error in field.errors %}
                 {% include 'error_alert.html' %}
             {% endfor %}
@@ -20,7 +24,6 @@
         {% include 'error_alert.html' %}
     {% endif %}
 
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    <p>{{ form.submit(type="submit", class="btn btn-outline-light") }}</p>
 </form>
-
 {% endblock %}

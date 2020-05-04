@@ -1,0 +1,94 @@
+<div class="card border-light bg-dark" style="margin-bottom: 20px">
+    <div class="card-header border-light">
+        <div class="row">
+            <div class="col">
+                <h2 class="text-light">{{ user.login }}</h2>
+            </div>
+
+            <div class="col">
+                <div style="float: right">
+                {% if user.id == current_user.id %}
+                    <a class="btn btn-outline-light pull-right" style="float:left" href="/edit_account" role="button"><h5>Редактировать</h5></a>
+                {% else %}
+                    {% if user.private_account %}
+                        {% if user in current_user.subscriptions %}
+                            <a class="btn btn-outline-light" href="/cancel_subscription?user_id={{ user.id }}&back_url=/user/{{ user.id }}/{{page_info.page_number}}" role="button"><h5>Отписаться</h5></a>
+                        {% elif user in current_user.requested_subscriptions %}
+                            <a class="btn btn-outline-light" href="/cancel_subscription?user_id={{ user.id }}&back_url=/user/{{ user.id }}/{{page_info.page_number}}" role="button"><h5>Отменить запрос</h5></a>
+                        {% else %}
+                            <a class="btn btn-outline-light" href="/subscribe?user_id={{ user.id }}&back_url=/user/{{ user.id }}/{{page_info.page_number}}" role="button"><h5>Подписаться</h5></a>
+                        {% endif %}
+                    {% else %}
+                        {% if user in current_user.subscriptions %}
+                            <a class="btn btn-outline-light" href="/cancel_subscription?user_id={{ user.id }}&back_url=/user/{{ user.id }}/{{page_info.page_number}}" role="button"><h5>Отписаться</h5></a>
+                        {% else %}
+                            <a class="btn btn-outline-light" href="/subscribe?user_id={{ user.id }}&back_url=/user/{{ user.id }}/{{page_info.page_number}}" role="button"><h5>Подписаться</h5></a>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div>
+            <img style="width:200px; height:200px; border-radius: 30px; float: left" src="/static/img/{{ user.avatar_photo_id }}.jpg">
+            <div class="row">
+                <div class="col">
+                    <div class="card bg-dark">
+                       {% if info_available %}
+                        <a href="./{{page_info.page_number}}" class="btn btn-outline-light">
+                        {% else %}
+                        <a href="./{{page_info.page_number}}" class="btn btn-outline-light disabled">
+                        {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">Публикаций</h5>
+                                <h3 class="card-text">{{ user.posts|list|length }}</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card bg-dark">
+                        {% if info_available %}
+                            <a href="/subscribers/{{ user.id }}/1" class="btn btn-outline-light">
+                        {% else %}
+                            <a href="/subscribers/{{ user.id }}/1" class="btn btn-outline-light disabled">
+                        {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">Подписчиков</h5>
+                                <h3 class="card-text">{{ user.subscribers|list|length }}
+                                    {% if current_user.id == user.id and current_user.requested_subscribers|list|length > 0%}
+                                    ({{ current_user.requested_subscribers|list|length }})
+                                    {% endif %}
+                                </h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card bg-dark">
+                        {% if info_available %}
+                        <a href="/subscriptions/{{ user.id }}/1" class="btn btn-outline-light">
+                        {% else %}
+                        <a href="/subscriptions/{{ user.id }}/1" class="btn btn-outline-light disabled">
+                        {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">Подписок</h5>
+                                <h3 class="card-text">{{ user.subscriptions|list|length }}</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="w-100"></div>
+
+                <div class="col">
+                    <h4 class="text-light" style="padding-left: 5px">{{ user.description }}</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

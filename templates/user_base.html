@@ -1,11 +1,6 @@
 {% extends "base.html" %}
 
-{% block content %}
-<h2>{{ user.login }}</h2>
-<div>
-    <img style="width:200px; height:200px; border-radius: 30px; float: left"
-         src="/static/img/{{ user.avatar_photo_id }}.jpg">
-    {% if user.private_account %}
+{% if user.private_account %}
         {% if user.id == current_user.id %}
             {% set info_available = True %}
         {% else %}
@@ -19,58 +14,58 @@
         {% set info_available = True %}
     {% endif %}
 
-    {% if info_available %}
-        <div style="margin-left: 50px; margin-right: 50px; float: left;">
-            <h2 align="center">
-                <a href="/subscribers/{{ user.id }}/1" style="text-decoration:none;">{{ user.subscribers|list|length }}</a>
-            </h2>
-            <h3 align="center">
-                <a href="/subscribers/{{ user.id }}/1" style="text-decoration:none;">подписчиков</a>
-            </h3>
+
+{% block content %}
+
+{% include 'user_info_card.html' %}
+
+<div class="row">
+    {% if user.id == current_user.id %}
+    <div class="col">
+        <div style="padding: 20px 0px 10px 0px"><a class="btn btn-outline-light" href="/add_post" role="button" ><h5>Новый пост</h5></a></div>
+    </div>
+    {% endif %}
+    {% if posts_list|list|length != 0 and info_available%}
+    <div class="col">
+        <div style="float: right">
+            <div class="dropdown" style="padding: 20px 0px 10px 0px">
+              <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Сортировка</button>
+              <div class="dropdown-menu bg-dark text-light border-light" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item text-light" href="/set_sort_post_mode?type=1&back_url=/user/{{ user.id }}">Сначала новые</a>
+                <a class="dropdown-item text-light" href="/set_sort_post_mode?type=2&back_url=/user/{{ user.id }}">Сначала старые</a>
+                <a class="dropdown-item text-light" href="/set_sort_post_mode?type=3&back_url=/user/{{ user.id }}">Сначала залайканные</a>
+              </div>
+            </div>
         </div>
-        <div style="margin-left: 25px; margin-right: 50px;">
-            <h2 align="center">
-                <a href="/subscriptions/{{ user.id }}/1" style="text-decoration:none;">{{ user.subscriptions|list|length }}</a>
-            </h2>
-            <h3 align="center">
-                <a href="/subscriptions/{{ user.id }}/1" style="text-decoration:none;">подписок</a>
-            </h3>
-        </div>
-    {% else %}
-        <div style="margin-left: 50px; margin-right: 50px; float: left;">
-            <h2 align="center">{{ user.subscribers|list|length }}</h2>
-            <h3 align="center">подписчиков</h3>
-        </div>
-        <div style="margin-left: 25px; margin-right: 50px;">
-            <h2 align="center">{{ user.subscriptions|list|length }}</h2>
-            <h3 align="center">подписок</h3>
-        </div>
+    </div>
     {% endif %}
 </div>
 
-<h4>{{ user.description }}</h4>
 
-{% if user.id == current_user.id %}
-    <a class="btn btn-primary" href="/edit" role="button">Редактировать</a>
-    <a class="btn btn-primary" href="/settings" role="button">Настройки</a>
+{% if info_available %}
+    {% for post in posts_list %}
+        {% include 'post_user_page.html' %}
+    {% endfor %}
+
+    {% if page_info.pages_count > 1 %}
+        <div class="row">
+            {% if page_info.page_number != 1 %}
+                <div class="col">
+                    <a class="btn btn-outline-light" href="/user/{{user.id}}/{{page_info.page_number - 1}}" role="button">Предыдущая страница</a>
+                </div>
+            {%endif%}
+
+            {%if page_info.page_number < page_info.pages_count%}
+                <div style="float: right">
+                    <div class="col">
+                        <a class="btn btn-outline-light" href="/user/{{user.id}}/{{page_info.page_number + 1}}" role="button">Следующая страница</a>
+                    </div>
+                </div>
+            {%endif%}
+        </div>
+    {%endif%}
 {% else %}
-    {% if user.private_account %}
-        {% if user in current_user.subscriptions %}
-            <a class="btn btn-primary" href="/cancel_subscription/{{ user.id }}" role="button">Отписаться</a>
-        {% elif user in current_user.requested_subscriptions %}
-            <a class="btn btn-primary" href="/cancel_subscription/{{ user.id }}" role="button">Отменить запрос</a>
-        {% else %}
-            <a class="btn btn-primary" href="/subscribe/{{ user.id }}" role="button">Подписаться</a>
-        {% endif %}
-    {% else %}
-        {% if user in current_user.subscriptions %}
-            <a class="btn btn-primary" href="/cancel_subscription/{{ user.id }}" role="button">Отписаться</a>
-        {% else %}
-            <a class="btn btn-primary" href="/subscribe/{{ user.id }}" role="button">Подписаться</a>
-        {% endif %}
-    {% endif %}
-{% endif %}
-
-
+    <h2 class="text-light" align="center">Аккаунт приватный. Отправьте запрос на подписку пользователю и дождитесь принятия.</h2>
+{%endif%}
 
 {% endblock %}

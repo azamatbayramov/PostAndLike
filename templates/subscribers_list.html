@@ -1,28 +1,52 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Подписки пользователия {{ user.login }}</h2>
-<table class="table">
-    <tbody>
-    {% for i in subscribers %}
-    <tr>
-        {% if i.avatar_photo_id != 0 %}
-            <td><img src='/static/img/{{ i.avatar_photo_id }}.jpg' style="width:50px; height:50px; float: left"></td>
-        {% endif %}
-        <td><a href="/user/{{ i.id }}">{{ i.login }}</a></td>
-        {% if user.id == current_user.id %}
-        <td><a class="btn btn-primary" href="/delete_subscriber?id={{ i.id }}&back_url=/subscribers/{{ current_user.id }}/{{page_info.page_number}}" role="button">Отписать</a></td>
-        {% endif %}
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
-{% if page_info.pages_count != 1 %}
-{% if page_info.page_number != 1 %}
-<a class="btn btn-primary" href="/subscribers/{{user.id}}/{{page_info.page_number - 1}}" role="button">Предыдущая страница</a>
+
+{% if current_user.private_account %}
+    <a href="/requested_subscribers/1" class="btn btn-outline-light" style="margin-left: 20px">Запросы({{ current_user.requested_subscribers|list|length }})</a>
+{% endif %}
+
+{% if user.id == current_user.id %}
+<h2 class="text-light" style="margin-bottom: 20px">Мои подписчики</h2>
+{% else %}
+<h2 class="text-light" style="margin-bottom: 20px">Подписчики пользователя {{ user.login }}</h2>
+{% endif %}
+
+{% for i in subscribers %}
+    <div class="card bg-dark border-light" style="margin-bottom: 10px">
+        <div class="row">
+            <div class="col">
+                <a href="/user/{{ i.id }}"><img src='/static/img/{{ i.avatar_photo_id }}.jpg' style="width:50px; height:50px; float: left"></a>
+            </div>
+            <div class="col">
+                <a href="/user/{{ i.id }}" style="text-decoration: none;" class="text-light"><h2>{{ i.login }}</h2></a>
+            </div>
+            <div class="col">
+                {% if user.id == current_user.id %}
+                    <a class="btn btn-outline-light float-right" href="/delete_subscriber?user_id={{ i.id }}&back_url=/subscribers/{{ current_user.id }}/{{page_info.page_number}}" role="button">Отписать</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endfor %}
+
+{% if page_info.pages_count > 1 %}
+    <div class="row">
+        {% if page_info.page_number != 1 %}
+            <div class="col">
+                <a class="btn btn-outline-light" href="/subscribers/{{user.id}}/{{page_info.page_number - 1}}" role="button">Предыдущая страница</a>
+            </div>
+        {%endif%}
+
+        {%if page_info.page_number < page_info.pages_count%}
+            <div style="float: right">
+                <div class="col">
+                    <a class="btn btn-outline-light" href="/subscribers/{{user.id}}/{{page_info.page_number + 1}}" role="button">Следующая страница</a>
+                </div>
+            </div>
+        {%endif%}
+    </div>
 {%endif%}
-{%if page_info.page_number != page_info.pages_count%}
-<a class="btn btn-primary" href="/subscribers/{{user.id}}/{{page_info.page_number + 1}}" role="button">Следующая страница</a>
-{%endif%}
-{%endif%}
+
 {% endblock %}
