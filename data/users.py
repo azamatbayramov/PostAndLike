@@ -34,6 +34,7 @@ requested_subscribers_list_table = sqlalchemy.Table(
 )
 
 
+# Класс модели пользователя
 class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'users'
 

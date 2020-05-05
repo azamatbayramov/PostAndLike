@@ -527,16 +527,18 @@ def edit_post(post_id):
     args = dict(request.args)
     session = db_session.create_session()
     post = session.query(Post).filter(Post.id == post_id).first()
-    form = EditPostForm(obj=post)
-    if form.validate_on_submit():
-        post.title = form.title.data
-        post.text = form.text.data
-        now_datetime = datetime.datetime.now()
-        post.editing_date = now_datetime
-        post.editing_date_norm_view = date_to_normal_view(now_datetime)
-        session.commit()
-        return redirect(args['back_url'])
-    return render_template('add_edit_post_page.html', form=form, add=False)
+    if post.author.id == current_user.id:
+        form = EditPostForm(obj=post)
+        if form.validate_on_submit():
+            post.title = form.title.data
+            post.text = form.text.data
+            now_datetime = datetime.datetime.now()
+            post.editing_date = now_datetime
+            post.editing_date_norm_view = date_to_normal_view(now_datetime)
+            session.commit()
+            return redirect(args['back_url'])
+        return render_template('add_edit_post_page.html', form=form, add=False)
+    return redirect('/')
 
 
 # Функция удаления поста
@@ -546,9 +548,11 @@ def delete_post():
     args = dict(request.args)
     session = db_session.create_session()
     post = session.query(Post).filter(Post.id == args['post_id']).first()
-    session.delete(post)
-    session.commit()
-    return redirect(args['back_url'])
+    if post.author.id == current_user.id:
+        session.delete(post)
+        session.commit()
+        return redirect(args['back_url'])
+    return redirect('/')
 
 
 # Функция для приведения даты к нормальному виду
@@ -634,17 +638,20 @@ def posts(page_number):
 @app.route('/search', methods=['GET', 'POST'])
 @login_required
 def search():
-    form = SearchForm()
-    session = db_session.create_session()
-    if form.validate_on_submit():
-        if form.search_type.data == '2':
-            users = session.query(User).filter(User.login.like(f'%{form.text.data}%')).all()
-        elif form.search_type.data == '1':
-            users = session.query(User).filter(User.id == int(form.text.data)).all()
-        else:
-            users = session.query(User).all()
-        return render_template('search_page.html', form=form, search_results=users)
-    return render_template('search_page.html', form=form)
+    try:
+        form = SearchForm()
+        session = db_session.create_session()
+        if form.validate_on_submit():
+            if form.search_type.data == '2':
+                users = session.query(User).filter(User.login.like(f'%{form.text.data}%')).all()
+            elif form.search_type.data == '1':
+                users = session.query(User).filter(User.id == int(form.text.data)).all()
+            else:
+                users = session.query(User).all()
+            return render_template('search_page.html', form=form, search_results=users)
+        return render_template('search_page.html', form=form)
+    except Exception:
+        return redirect('/search')
 
 
 # Функция редиректа с главной страницы
@@ -656,7 +663,7 @@ def main_page():
 # Функция запуска программы
 def main():
     port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='0.0.0.0', port=port)
 
 
 # Функция для изменения страницы ошибки 404

@@ -1,5 +1,7 @@
 from requests import get
 
+# Тесты API
+
 print('Проверка получения всех пользователей')
 print(get('http://localhost:5000/api/users').json())
 

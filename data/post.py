@@ -12,6 +12,7 @@ liked_users_table = sqlalchemy.Table(
 )
 
 
+# Класс модели поста
 class Post(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'posts'
 
