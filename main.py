@@ -1,9 +1,11 @@
-from flask import Flask, render_template, redirect, session, make_response, jsonify, request
+from flask import Flask, render_template, redirect, session, request
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
+from flask_restful import Api
 from forms import LoginForm, RegisterForm, EditAccountForm, ChangePasswordForm, AddPostForm, \
     EditPostForm, ChangeAvatarForm, SearchForm
 from data.__all_models import users, post
 from data import db_session
+import users_resourse
 import datetime
 import math
 import os
@@ -15,6 +17,11 @@ Post = post.Post
 # Настройка Flask
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+
+# Настройка API
+api = Api(app)
+api.add_resource(users_resourse.UsersListResource, '/api/users')
+api.add_resource(users_resourse.UsersResource, '/api/users/<int:user_id>')
 
 # Инициализация базы данных
 db_session.global_init("db/database.sqlite")
@@ -145,7 +152,6 @@ def user_page(user_id, page_number):
                 return redirect(f'/user/{user_id}')
 
         if user:
-            print(list(cur_user.requested_subscriptions))
             return render_template('user_base.html', user=user, current_user=cur_user,
                                    posts_list=posts, page_info=page_info,
                                    back_url='/user/{{ current_user.id }}/{{ page_info.page_number }}')
@@ -403,6 +409,7 @@ def redirect_subscriptions(user_id):
 def redirect_subscribers(user_id):
     return redirect(f'/subscribers/{user_id}/1')
 
+
 # Функция страницы подписчиков
 @app.route('/subscribers/<int:user_id>/<int:page_number>', methods=['GET', 'POST'])
 @login_required
@@ -427,7 +434,8 @@ def subscribers(user_id, page_number):
                 return redirect(f'/user/{user.id}')
 
         if len(subscribers) <= 0:
-            if not (current_user.id == user.id and len(list(current_user.requested_subscribers)) > 0):
+            if not (current_user.id == user.id and len(
+                    list(current_user.requested_subscribers)) > 0):
                 return redirect(f'/user/{user.id}')
 
         return render_template('subscribers_list.html', subscribers=subscribers,
@@ -482,16 +490,14 @@ def requested_subscribers(page_number):
     if len(subscribers) > ONE_PAGE_SUBSCRIBERS_COUNT:
         if page_number <= page_info['pages_count']:
             subscribers = subscribers[(page_number - 1) * ONE_PAGE_SUBSCRIBERS_COUNT:
-                                          page_number * ONE_PAGE_SUBSCRIBERS_COUNT]
+                                      page_number * ONE_PAGE_SUBSCRIBERS_COUNT]
         else:
             return redirect('/')
-    print(subscribers)
     if len(subscribers) <= 0:
         return redirect('/my_subscribers')
 
     return render_template('requested_subscribers_page.html', subscribers=subscribers,
                            user=user, current_user=current_user, page_info=page_info)
-
 
 
 # Функция создания поста
@@ -587,7 +593,7 @@ def redirect_posts():
 def posts(page_number):
     session1 = db_session.create_session()
     if current_user.is_authenticated:
-        cur_user = user = session1.query(User).filter(User.id == current_user.id).first()
+        cur_user = session1.query(User).filter(User.id == current_user.id).first()
         posts = list()
         for i in cur_user.subscriptions:
             for s in i.posts:
@@ -635,7 +641,8 @@ def search():
             users = session.query(User).filter(User.login.like(f'%{form.text.data}%')).all()
         elif form.search_type.data == '1':
             users = session.query(User).filter(User.id == int(form.text.data)).all()
-
+        else:
+            users = session.query(User).all()
         return render_template('search_page.html', form=form, search_results=users)
     return render_template('search_page.html', form=form)
 
@@ -658,5 +665,6 @@ def not_found(error):
     return render_template('404_error_page.html')
 
 
+# Запуск программы
 if __name__ == '__main__':
     main()

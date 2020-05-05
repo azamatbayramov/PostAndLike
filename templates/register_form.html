@@ -2,7 +2,8 @@
 
 {% block content %}
 <h1 align="center" class="text-light">Регистрация</h1>
-
+<h5 align="center" class="text-light">Логин должен состоять из не менее чем 3 символов</h5>
+<h5 align="center" class="text-light">Пароль должен содержать цифры, заглавные и строчные буквы и должен состоять из не менее 6 символов</h5>
 <form action="" method="post" novalidate>
     <div>{{ form.csrf_token }}</div>
 
@@ -20,7 +21,7 @@
         {% include 'error_alert.html' %}
     {% endif %}
 
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    <p>{{ form.submit(type="submit", class="btn btn-outline-light") }}</p>
 </form>
 
 {% endblock %}
