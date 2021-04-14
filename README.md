@@ -21,3 +21,9 @@
 
 ### Authorization
 ![hippo](http://g.recordit.co/85SFbD8GT3.gif)
+
+### Edit login and profile description
+![hippo](http://g.recordit.co/EHfu8CDpBP.gif)
+
+### Edit profile picture
+![hippo](http://g.recordit.co/mSC038sskc.gif)
