@@ -9,12 +9,15 @@
     + Change profile picture
     + Edit profile description
     + Set account public/private
+    + Change password
 + Create posts
 + Edit posts
 + Delete posts
 + Search users
 + Subscribe to users
 + Read other user's posts
+
+## GIF
 
 ### Registration
 ![hippo](http://g.recordit.co/p2Gyu7M1Ey.gif)
@@ -25,5 +28,8 @@
 ### Edit login and profile description
 ![hippo](http://g.recordit.co/EHfu8CDpBP.gif)
 
-### Edit profile picture
+### Change profile picture
 ![hippo](http://g.recordit.co/mSC038sskc.gif)
+
+### Set account public/private and change password
+![hippo](http://g.recordit.co/nR7TNMwibk.gif)
