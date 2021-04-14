@@ -18,6 +18,7 @@
 + [Subscribe to users](#search-user-and-subscribe-to-user)
 + [Read other user's posts](#read-other-users-posts)
 + [Sort posts using different methods](#sort-posts-using-different-methods)
++ [See someone's subscriptions](#see-someones-subscriptions)
 
 
 
@@ -80,5 +81,10 @@
 
 ### Sort posts using different methods
 ![gif](http://g.recordit.co/LQG2pGjED0.gif)
+
+#### [Go up](#in-the-site-you-can)
+
+### See someone's subscriptions
+![gif](http://g.recordit.co/t1u2FDvFQO.gif)
 
 #### [Go up](#in-the-site-you-can)
