@@ -1,69 +1,112 @@
+"""Forms classes"""
+
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, SelectField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, \
+    TextAreaField, SelectField
 from wtforms.validators import DataRequired, EqualTo, Length
 from flask_wtf.file import FileField
 
 
-# Форма регистрации
+# Registration form
 class RegisterForm(FlaskForm):
-    login = StringField('Логин', validators=[DataRequired(message='Поле не заполнено'),
-                                             Length(min=3, message='Логин слишком короткий')])
-    password = PasswordField('Пароль', validators=[DataRequired(message='Поле не заполнено'),
-                                                   Length(min=6, message='Пароль слишком короткий')])
-    repeat_password = PasswordField('Повторите пароль',
-                                    validators=[DataRequired(message='Поле не заполнено'),
-                                                EqualTo('password',
-                                                        message='Пароли не совпадают')])
+    login = StringField(
+        'Логин',
+        validators=[DataRequired(message='Поле не заполнено'),
+                    Length(min=3, message='Логин слишком короткий')]
+    )
+
+    password = PasswordField(
+        'Пароль',
+        validators=[DataRequired(message='Поле не заполнено'),
+                    Length(min=6, message='Пароль слишком короткий')]
+    )
+
+    repeat_password = PasswordField(
+        'Повторите пароль',
+        validators=[DataRequired(message='Поле не заполнено'),
+                    EqualTo('password', message='Пароли не совпадают')]
+    )
     submit = SubmitField('Зарегестрироваться')
 
 
-# Форма авторизации
+# Authorization form
 class LoginForm(FlaskForm):
-    login = StringField('Логин', validators=[DataRequired(message='Поле не заполнено')])
-    password = PasswordField('Пароль', validators=[DataRequired(message='Поле не заполнено')])
+    login = StringField(
+        'Логин', validators=[DataRequired(message='Поле не заполнено')]
+    )
+
+    password = PasswordField(
+        'Пароль', validators=[DataRequired(message='Поле не заполнено')]
+    )
+
     remember_me = BooleanField('Запомнить меня')
     submit = SubmitField('Войти')
 
 
-# Форма редактирования аккаунта
+# Account editing form
 class EditAccountForm(FlaskForm):
     login = StringField('Логин', validators=[DataRequired()])
     description = TextAreaField('Описание')
     submit = SubmitField('Сохранить')
 
 
-# Форма смены пароля от аккаунта
+# Account password change form
 class ChangePasswordForm(FlaskForm):
-    old_password = PasswordField('Старый пароль', validators=[DataRequired(message='Поле не заполнено')])
-    new_password = PasswordField('Новый пароль', validators=[DataRequired(message='Поле не заполнено'), Length(min=6, message='Пароль слишком короткий')])
-    repeat_password = PasswordField('Повторите новый пароль', validators=[
-        DataRequired(message='Поле не заполнено'),
-        EqualTo('new_password', message='Пароли не совпадают')])
+    old_password = PasswordField(
+        'Старый пароль', validators=[DataRequired(message='Поле не заполнено')]
+    )
+
+    new_password = PasswordField(
+        'Новый пароль',
+        validators=[DataRequired(message='Поле не заполнено'),
+                    Length(min=6, message='Пароль слишком короткий')]
+    )
+
+    repeat_password = PasswordField(
+        'Повторите новый пароль',
+        validators=[DataRequired(message='Поле не заполнено'),
+                    EqualTo('new_password', message='Пароли не совпадают')]
+    )
+
     submit = SubmitField('Сохранить')
 
 
-# Форма создания поста
+# Adding post form
 class AddPostForm(FlaskForm):
     title = StringField('Заголовок')
-    text = TextAreaField('Текст', validators=[DataRequired(message='Поле не заполнено')])
+
+    text = TextAreaField(
+        'Текст', validators=[DataRequired(message='Поле не заполнено')]
+    )
+
     submit = SubmitField('Опубликовать')
 
 
-# Форма редактирования аккаунта
+# Post editing form
 class EditPostForm(FlaskForm):
     title = StringField('Заголовок')
-    text = TextAreaField('Текст', validators=[DataRequired(message='Поле не заполнено')])
+
+    text = TextAreaField(
+        'Текст', validators=[DataRequired(message='Поле не заполнено')]
+    )
+
     submit = SubmitField('Сохранить')
 
 
-# Форма смены аватарки
+# Avatar change form
 class ChangeAvatarForm(FlaskForm):
     file = FileField('Фото(в формате jpg)')
     submit = SubmitField('Сохранить')
 
 
-# Форма поиска пользователей
+# User search form
 class SearchForm(FlaskForm):
-    text = StringField('Поле ввода', validators=[DataRequired(message='Поле не заполнено')])
-    search_type = SelectField('Тип поиска', choices=[('1', 'По ID'), ('2', 'По логину')], default=1)
+    text = StringField(
+        'Поле ввода', validators=[DataRequired(message='Поле не заполнено')]
+    )
+
+    search_type = SelectField(
+        'Тип поиска', choices=[('1', 'По ID'), ('2', 'По логину')], default=1
+    )
+
     submit = SubmitField('Поиск')
