@@ -13,9 +13,13 @@
 + Create posts
 + Edit posts
 + Delete posts
++ Like posts
 + Search users
 + Subscribe to users
 + Read other user's posts
++ Sort posts using different methods
+
+
 
 ## GIF
 
@@ -42,3 +46,15 @@
 
 ### Delete post
 ![hippo](http://g.recordit.co/7CoKoIja1y.gif)
+
+### Like post
+![hippo](http://g.recordit.co/ehPkH4K546.gif)
+
+### Search user and subscribe to user
+![hippo](http://g.recordit.co/HxINnb3iFF.gif)
+
+### Read other user's posts
+![hippo](http://g.recordit.co/8KMmJSiOvF.gif)
+
+### Sort posts using different methods
+![hippo](http://g.recordit.co/LQG2pGjED0.gif)
