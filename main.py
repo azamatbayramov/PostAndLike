@@ -1,8 +1,11 @@
+"""Main module with all processing functions"""
+
 from flask import Flask, render_template, redirect, session, request
-from flask_login import LoginManager, login_user, current_user, login_required, logout_user
+from flask_login import LoginManager, login_user, current_user, \
+    login_required, logout_user
 from flask_restful import Api
-from forms import LoginForm, RegisterForm, EditAccountForm, ChangePasswordForm, AddPostForm, \
-    EditPostForm, ChangeAvatarForm, SearchForm
+from forms import LoginForm, RegisterForm, EditAccountForm, \
+    ChangePasswordForm, AddPostForm, EditPostForm, ChangeAvatarForm, SearchForm
 from data.__all_models import users, post
 from data import db_session
 import users_resourse
@@ -10,40 +13,40 @@ import datetime
 import math
 import os
 
-# Извлечение классов
+# Classes extracting
 User = users.User
 Post = post.Post
 
-# Настройка Flask
+# Flask settings
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
-# Настройка API
+# API settings
 api = Api(app)
 api.add_resource(users_resourse.UsersListResource, '/api/users')
 api.add_resource(users_resourse.UsersResource, '/api/users/<int:user_id>')
 
-# Инициализация базы данных
+# Database initialization
 db_session.global_init("db/database.sqlite")
 
-# Инициализация менеджера авторизации
+# Authorization manager initialization
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'please_register'
 
-# Настройка количества показываемых объектов
+# Pages settings
 ONE_PAGE_SUBSCRIBERS_COUNT = 10
 ONE_PAGE_POSTS_COUNT = 10
 
 
-# Функция для менеджера авторизации
+# Function for authorization manager
 @login_manager.user_loader
 def load_user(user_id):
     session = db_session.create_session()
     return session.query(User).get(user_id)
 
 
-# Функция страницы авторизации
+# Authorization page function
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -53,13 +56,13 @@ def login():
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
             return redirect("/")
-        return render_template('login.html',
-                               error="Неправильный логин или пароль",
-                               form=form)
+        return render_template(
+            'login.html', error="Неправильный логин или пароль", form=form
+        )
     return render_template('login.html', form=form)
 
 
-# Функция выхода из аккаунта
+# Logout function
 @app.route('/logout')
 @login_required
 def logout():
@@ -67,7 +70,7 @@ def logout():
     return redirect("/")
 
 
-# Функция проверки надежности пароля
+# Password reliability checking function
 def check_password(password):
     digit = False
     alpha = False
@@ -91,15 +94,18 @@ def check_password(password):
     return 'OK'
 
 
-# Функция страницы регистрации
+# Registration page function
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     session = db_session.create_session()
     form = RegisterForm()
     if form.validate_on_submit():
         if session.query(User).filter(User.login == form.login.data).first():
-            return render_template('register_form.html', form=form,
-                                   error='Пользователь с таким логином уже существует')
+            return render_template(
+                'register_form.html',
+                form=form,
+                error='Пользователь с таким логином уже существует'
+            )
 
         password_check = check_password(form.password.data)
         if password_check != 'OK':
@@ -116,18 +122,23 @@ def register():
     return render_template('register_form.html', form=form)
 
 
-# Функция страницы пользователя
+# User page function
 @app.route('/user/<int:user_id>/<int:page_number>', methods=['GET', 'POST'])
 @login_required
 def user_page(user_id, page_number):
     session1 = db_session.create_session()
     if current_user.is_authenticated:
         user = session1.query(User).filter(User.id == user_id).first()
-        cur_user = session1.query(User).filter(User.id == current_user.id).first()
+        cur_user = session1.query(User).filter(
+            User.id == current_user.id
+        ).first()
+
         posts = list(user.posts)
         page_info = {
             'page_number': page_number,
-            'pages_count': math.ceil(len(list(user.posts)) / ONE_PAGE_POSTS_COUNT)
+            'pages_count': math.ceil(
+                len(list(user.posts)) / ONE_PAGE_POSTS_COUNT
+            )
         }
 
         if 'sort_post_mode' in session:
@@ -142,7 +153,9 @@ def user_page(user_id, page_number):
         elif sort_post_mode == 2:
             posts.sort(key=lambda post: post.id)
         elif sort_post_mode == 3:
-            posts.sort(key=lambda post: len(list(post.liked_users)), reverse=True)
+            posts.sort(
+                key=lambda post: len(list(post.liked_users)), reverse=True
+            )
 
         if len(posts) > ONE_PAGE_POSTS_COUNT:
             if page_number <= page_info['pages_count']:
@@ -152,22 +165,27 @@ def user_page(user_id, page_number):
                 return redirect(f'/user/{user_id}')
 
         if user:
-            return render_template('user_base.html', user=user, current_user=cur_user,
-                                   posts_list=posts, page_info=page_info,
-                                   back_url='/user/{{ current_user.id }}/{{ page_info.page_number }}')
+            return render_template(
+                'user_base.html',
+                user=user,
+                current_user=cur_user,
+                posts_list=posts,
+                page_info=page_info,
+                back_url='/user/{{ current_user.id }}/{{ page_info.page_number }}'
+            )
         else:
             return redirect('/')
     else:
         return 'Зарегайся пж, мне лень это место делать'
 
 
-# Функция при неавторизованном пользователе
+# Function for unauthorized user
 @app.route('/please_register_or_auth', methods=['GET', 'POST'])
 def please_register():
     return render_template('please_register.html')
 
 
-# Функция для подписки
+# Function for subscribe to user
 @app.route('/subscribe', methods=['GET', 'POST'])
 @login_required
 def subscribe():
@@ -194,7 +212,7 @@ def subscribe():
         return redirect('/')
 
 
-# Функция для отписки от пользователя
+# Function for subscription cancelling
 @app.route('/cancel_subscription', methods=['GET', 'POST'])
 @login_required
 def cancel_subscription():
@@ -219,7 +237,7 @@ def cancel_subscription():
         return redirect('/')
 
 
-# Функция для отписки подписчика
+# Function for subscriber deleting
 @app.route('/delete_subscriber', methods=['GET', 'POST'])
 @login_required
 def delete_subscriber():
@@ -240,14 +258,18 @@ def delete_subscriber():
         return redirect('/')
 
 
-# Функция для принятия подписки при приватном аккаунте
+# Function for subscriber accepting
 @app.route('/accept_subscriber', methods=['GET', 'POST'])
 @login_required
 def accept_subscriber():
     if current_user.private_account:
         args = dict(request.args)
         session = db_session.create_session()
-        cur_user = session.query(User).filter(User.id == current_user.id).first()
+
+        cur_user = session.query(User).filter(
+            User.id == current_user.id
+        ).first()
+
         user = session.query(User).filter(User.id == args['user_id']).first()
         if user:
             if user.id != current_user.id:
@@ -270,7 +292,7 @@ def accept_subscriber():
         return redirect('/')
 
 
-# Функция для изменения метода сортировки просматриваемых постов пользователя
+# Function for post sorting mode editing
 @app.route('/set_sort_post_mode', methods=['GET', 'POST'])
 @login_required
 def set_sort_post_mode():
@@ -279,7 +301,7 @@ def set_sort_post_mode():
     return redirect(args['back_url'])
 
 
-# Функция редактирования аккаунта
+# Account editing page function
 @app.route('/edit_account', methods=['GET', 'POST'])
 @login_required
 def edit_account():
@@ -288,19 +310,24 @@ def edit_account():
         session = db_session.create_session()
         user = session.query(User).filter(User.id == current_user.id).first()
 
-        if user.login != form.login.data and session.query(User).filter(User.login ==
-                                                                        form.login.data).first():
-            return render_template('edit_account.html', form=form,
-                                   error='Пользователь с таким логином уже существует')
+        if user.login != form.login.data and session.query(User).filter(
+                User.login == form.login.data).first():
+
+            return render_template(
+                'edit_account.html',
+                form=form,
+                error='Пользователь с таким логином уже существует'
+            )
 
         user.login = form.login.data
         user.description = form.description.data
+
         session.commit()
         return redirect('/my_user')
     return render_template('edit_account.html', form=form)
 
 
-# Функция страницы смены аватарки
+# Avatar changing function
 @app.route('/change_avatar', methods=['GET', 'POST'])
 @login_required
 def change_avatar():
@@ -322,35 +349,35 @@ def change_avatar():
     return render_template('change_avatar_page.html', form=form)
 
 
-# Функция для ридеректа пользователя с простой ссылки на свою страницу
+# Function for redirecting user from simple url to own page
 @app.route('/my_user', methods=['GET', 'POST'])
 @login_required
 def my_user():
     return redirect(f'/user/{current_user.id}')
 
 
-# Функция для ридеректа пользователя с простой ссылки на свои подписки
+# Function for redirecting user from simple url to own subscriptions
 @app.route('/my_subscriptions', methods=['GET', 'POST'])
 @login_required
 def my_subscriptions():
     return redirect(f'/subscriptions/{current_user.id}')
 
 
-# Функция для ридеректа пользователя с простой ссылки на своих подписчиков
+# Function for redirecting user from simple url to own subscribers
 @app.route('/my_subscribers', methods=['GET', 'POST'])
 @login_required
 def my_subscribers():
     return redirect(f'/subscribers/{current_user.id}')
 
 
-# Функция настройки
+# Settings page function
 @app.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings():
     return render_template('settings_page.html', current_user=current_user)
 
 
-# Функция для изменения приватности аккаунта
+# Account private settings changing page function
 @app.route('/change_private', methods=['GET', 'POST'])
 @login_required
 def change_private():
@@ -362,7 +389,7 @@ def change_private():
     return redirect(args['back_url'])
 
 
-# Функция для смены пароля
+# Account password changing page function
 @app.route('/change_password', methods=['GET', 'POST'])
 @login_required
 def change_password():
@@ -386,7 +413,7 @@ def change_password():
     return render_template('change_password.html', form=form)
 
 
-# Функция для редиректа кратких ссылок на пользователя
+# Function for redirecting user from simple url to user page
 @app.route('/user/<int:user_id>', methods=['GET', 'POST'])
 @app.route('/user/<int:user_id>/', methods=['GET', 'POST'])
 @login_required
@@ -394,7 +421,7 @@ def redirect_user(user_id):
     return redirect(f'/user/{user_id}/1')
 
 
-# Функция для редиректа кратких ссылок на подписки пользователя
+# Function for redirecting user from simple url to user subscriptions
 @app.route('/subscriptions/<int:user_id>', methods=['GET', 'POST'])
 @app.route('/subscriptions/<int:user_id>/', methods=['GET', 'POST'])
 @login_required
@@ -402,7 +429,7 @@ def redirect_subscriptions(user_id):
     return redirect(f'/subscriptions/{user_id}/1')
 
 
-# Функция для редиректа кратких ссылок на подписчиков пользователя
+# Function for redirecting user from simple url to user subscribers
 @app.route('/subscribers/<int:user_id>', methods=['GET', 'POST'])
 @app.route('/subscribers/<int:user_id>/', methods=['GET', 'POST'])
 @login_required
@@ -410,7 +437,7 @@ def redirect_subscribers(user_id):
     return redirect(f'/subscribers/{user_id}/1')
 
 
-# Функция страницы подписчиков
+# Subscribers page function
 @app.route('/subscribers/<int:user_id>/<int:page_number>', methods=['GET', 'POST'])
 @login_required
 def subscribers(user_id, page_number):
@@ -420,12 +447,16 @@ def subscribers(user_id, page_number):
         subscribers = list(user.subscribers)
         page_info = {
             'page_number': page_number,
-            'pages_count': math.ceil(len(list(user.subscribers)) / ONE_PAGE_SUBSCRIBERS_COUNT)
+            'pages_count': math.ceil(
+                len(list(user.subscribers)) / ONE_PAGE_SUBSCRIBERS_COUNT
+            )
         }
         if len(subscribers) > ONE_PAGE_SUBSCRIBERS_COUNT:
             if page_number <= page_info['pages_count']:
-                subscribers = subscribers[(page_number - 1) * ONE_PAGE_SUBSCRIBERS_COUNT:
-                                          page_number * ONE_PAGE_SUBSCRIBERS_COUNT]
+                subscribers = subscribers[
+                              (page_number - 1) * ONE_PAGE_SUBSCRIBERS_COUNT:
+                              page_number * ONE_PAGE_SUBSCRIBERS_COUNT
+                              ]
             else:
                 return redirect('/')
 
@@ -438,13 +469,18 @@ def subscribers(user_id, page_number):
                     list(current_user.requested_subscribers)) > 0):
                 return redirect(f'/user/{user.id}')
 
-        return render_template('subscribers_list.html', subscribers=subscribers,
-                               user=user, current_user=current_user, page_info=page_info)
+        return render_template(
+            'subscribers_list.html',
+            subscribers=subscribers,
+            user=user,
+            current_user=current_user,
+            page_info=page_info
+        )
     else:
         return redirect('/')
 
 
-# Функция страницы подписок
+# Subscriptions page function
 @app.route('/subscriptions/<int:user_id>/<int:page_number>', methods=['GET', 'POST'])
 @login_required
 def subscriptions(user_id, page_number):
@@ -454,12 +490,16 @@ def subscriptions(user_id, page_number):
         subscriptions = list(user.subscriptions)
         page_info = {
             'page_number': page_number,
-            'pages_count': math.ceil(len(list(user.subscriptions)) / ONE_PAGE_SUBSCRIBERS_COUNT)
+            'pages_count': math.ceil(
+                len(list(user.subscriptions)) / ONE_PAGE_SUBSCRIBERS_COUNT
+            )
         }
         if len(subscriptions) > ONE_PAGE_SUBSCRIBERS_COUNT:
             if page_number <= page_info['pages_count']:
-                subscriptions = subscriptions[(page_number - 1) * ONE_PAGE_SUBSCRIBERS_COUNT:
-                                              page_number * ONE_PAGE_SUBSCRIBERS_COUNT]
+                subscriptions = subscriptions[
+                                (page_number - 1) * ONE_PAGE_SUBSCRIBERS_COUNT:
+                                page_number * ONE_PAGE_SUBSCRIBERS_COUNT
+                                ]
             else:
                 return redirect('/')
 
@@ -470,13 +510,18 @@ def subscriptions(user_id, page_number):
         if len(subscriptions) <= 0:
             return redirect(f'/user/{user.id}')
 
-        return render_template('subscriptions_list.html', subscriptions=subscriptions,
-                               user=user, current_user=current_user, page_info=page_info)
+        return render_template(
+            'subscriptions_list.html',
+            subscriptions=subscriptions,
+            user=user,
+            current_user=current_user,
+            page_info=page_info
+        )
     else:
         return redirect('/')
 
 
-# Функция страницы прзапрошенных подписчиков
+# Requested subscribers page function
 @app.route('/requested_subscribers/<int:page_number>', methods=['GET', 'POST'])
 @login_required
 def requested_subscribers(page_number):
@@ -485,22 +530,31 @@ def requested_subscribers(page_number):
     subscribers = list(user.requested_subscribers)
     page_info = {
         'page_number': page_number,
-        'pages_count': math.ceil(len(list(user.subscriptions)) / ONE_PAGE_SUBSCRIBERS_COUNT)
+        'pages_count': math.ceil(
+            len(list(user.subscriptions)) / ONE_PAGE_SUBSCRIBERS_COUNT
+        )
     }
     if len(subscribers) > ONE_PAGE_SUBSCRIBERS_COUNT:
         if page_number <= page_info['pages_count']:
-            subscribers = subscribers[(page_number - 1) * ONE_PAGE_SUBSCRIBERS_COUNT:
-                                      page_number * ONE_PAGE_SUBSCRIBERS_COUNT]
+            subscribers = subscribers[
+                          (page_number - 1) * ONE_PAGE_SUBSCRIBERS_COUNT:
+                          page_number * ONE_PAGE_SUBSCRIBERS_COUNT
+                          ]
         else:
             return redirect('/')
     if len(subscribers) <= 0:
         return redirect('/my_subscribers')
 
-    return render_template('requested_subscribers_page.html', subscribers=subscribers,
-                           user=user, current_user=current_user, page_info=page_info)
+    return render_template(
+        'requested_subscribers_page.html',
+        subscribers=subscribers,
+        user=user,
+        current_user=current_user,
+        page_info=page_info
+    )
 
 
-# Функция создания поста
+# Post adding function
 @app.route('/add_post', methods=['GET', 'POST'])
 @login_required
 def add_post():
@@ -520,7 +574,7 @@ def add_post():
     return render_template('add_edit_post_page.html', form=form, add=True)
 
 
-# Функция редактирования поста
+# Post editing function
 @app.route('/edit_post/<int:post_id>', methods=['GET', 'POST'])
 @login_required
 def edit_post(post_id):
@@ -541,7 +595,7 @@ def edit_post(post_id):
     return redirect('/')
 
 
-# Функция удаления поста
+# Post deleting funcion
 @app.route('/delete_post', methods=['GET', 'POST'])
 @login_required
 def delete_post():
@@ -555,7 +609,7 @@ def delete_post():
     return redirect('/')
 
 
-# Функция для приведения даты к нормальному виду
+# Function to convert date to normal view
 def date_to_normal_view(datetime):
     months_list = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн',
                    'июл', 'авг', 'сен', 'окт', 'ноя', 'дек']
@@ -565,7 +619,7 @@ def date_to_normal_view(datetime):
     return returned_text
 
 
-# Функция для того чтобы поставить или убрать лайк с поста
+# Function for setting like
 @app.route('/set_like', methods=['GET', 'POST'])
 @login_required
 def set_like():
@@ -583,7 +637,7 @@ def set_like():
     return redirect(args['back_url'])
 
 
-# Функция для редиректа с простых ссылок
+# Function for redirecting from simple url
 @app.route('/posts/')
 @app.route('/posts')
 @login_required
@@ -591,7 +645,7 @@ def redirect_posts():
     return redirect('/posts/1')
 
 
-# Функция главной страницы
+# Main page function
 @app.route('/posts/<int:page_number>')
 @login_required
 def posts(page_number):
@@ -621,7 +675,9 @@ def posts(page_number):
         elif sort_post_mode == 2:
             posts.sort(key=lambda post: post.id)
         elif sort_post_mode == 3:
-            posts.sort(key=lambda post: len(list(post.liked_users)), reverse=True)
+            posts.sort(
+                key=lambda post: len(list(post.liked_users)), reverse=True
+            )
 
         if len(posts) > ONE_PAGE_POSTS_COUNT:
             if page_number <= page_info['pages_count']:
@@ -630,11 +686,15 @@ def posts(page_number):
             else:
                 return redirect(f'/posts')
 
-        return render_template('main_page.html', current_user=current_user, posts_list=posts,
-                               page_info=page_info)
+        return render_template(
+            'main_page.html',
+            current_user=current_user,
+            posts_list=posts,
+            page_info=page_info
+        )
 
 
-# Функция страницы поиска
+# Search page function
 @app.route('/search', methods=['GET', 'POST'])
 @login_required
 def search():
@@ -643,35 +703,46 @@ def search():
         session = db_session.create_session()
         if form.validate_on_submit():
             if form.search_type.data == '2':
-                users = session.query(User).filter(User.login.like(f'%{form.text.data}%')).all()
+                users = session.query(User).filter(
+                    User.login.like(f'%{form.text.data}%')
+                ).all()
+
             elif form.search_type.data == '1':
-                users = session.query(User).filter(User.id == int(form.text.data)).all()
+                users = session.query(User).filter(
+                    User.id == int(form.text.data)
+                ).all()
+
             else:
                 users = session.query(User).all()
-            return render_template('search_page.html', form=form, search_results=users)
+            return render_template(
+                'search_page.html',
+                form=form,
+                search_results=users
+            )
+
         return render_template('search_page.html', form=form)
     except Exception:
         return redirect('/search')
 
 
-# Функция редиректа с главной страницы
+# Function to redirect from main page
 @app.route('/')
 def main_page():
     return redirect('/posts')
 
 
-# Функция запуска программы
+# Main function
 def main():
     port = int(os.environ.get("PORT", 5000))
     app.run(port=port)
 
 
-# Функция для изменения страницы ошибки 404
+# 404 error page function
 @app.errorhandler(404)
 def not_found(error):
     return render_template('404_error_page.html')
 
 
-# Запуск программы
+# Site launch
 if __name__ == '__main__':
     main()
