@@ -26,35 +26,59 @@
 ### Register new account
 ![gif](http://g.recordit.co/p2Gyu7M1Ey.gif)
 
+#### [Go up](#in-the-site-you-can)
+
 ### Log in to account
 ![gif](http://g.recordit.co/85SFbD8GT3.gif)
+
+#### [Go up](#in-the-site-you-can)
 
 ### Edit login and profile description
 ![gif](http://g.recordit.co/EHfu8CDpBP.gif)
 
+#### [Go up](#in-the-site-you-can)
+
 ### Change profile picture
 ![gif](http://g.recordit.co/mSC038sskc.gif)
+
+#### [Go up](#in-the-site-you-can)
 
 ### Set account public/private and change password
 ![gif](http://g.recordit.co/nR7TNMwibk.gif)
 
+#### [Go up](#in-the-site-you-can)
+
 ### Create post
 ![gif](http://g.recordit.co/Uij814Ek9u.gif)
+
+#### [Go up](#in-the-site-you-can)
 
 ### Edit post
 ![gif](http://g.recordit.co/6Wys8aiyIQ.gif)
 
+#### [Go up](#in-the-site-you-can)
+
 ### Delete post
 ![gif](http://g.recordit.co/7CoKoIja1y.gif)
+
+#### [Go up](#in-the-site-you-can)
 
 ### Like post
 ![gif](http://g.recordit.co/ehPkH4K546.gif)
 
+#### [Go up](#in-the-site-you-can)
+
 ### Search user and subscribe to user
 ![gif](http://g.recordit.co/HxINnb3iFF.gif)
+
+#### [Go up](#in-the-site-you-can)
 
 ### Read other user's posts
 ![gif](http://g.recordit.co/8KMmJSiOvF.gif)
 
+#### [Go up](#in-the-site-you-can)
+
 ### Sort posts using different methods
 ![gif](http://g.recordit.co/LQG2pGjED0.gif)
+
+#### [Go up](#in-the-site-you-can)
