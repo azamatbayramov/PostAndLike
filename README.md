@@ -3,11 +3,11 @@
 
 ## In the site you can:
 + Register new account
-+ Log in to your account
++ Log in to account
 + Edit profile and account settings
     + Edit login
-    + Change profile picture
     + Edit profile description
+    + Change profile picture
     + Set account public/private
     + Change password
 + Create posts
@@ -23,38 +23,38 @@
 
 ## GIF
 
-### Registration
-![hippo](http://g.recordit.co/p2Gyu7M1Ey.gif)
+### Register new account
+![gif](http://g.recordit.co/p2Gyu7M1Ey.gif)
 
-### Authorization
-![hippo](http://g.recordit.co/85SFbD8GT3.gif)
+### Log in to account
+![gif](http://g.recordit.co/85SFbD8GT3.gif)
 
 ### Edit login and profile description
-![hippo](http://g.recordit.co/EHfu8CDpBP.gif)
+![gif](http://g.recordit.co/EHfu8CDpBP.gif)
 
 ### Change profile picture
-![hippo](http://g.recordit.co/mSC038sskc.gif)
+![gif](http://g.recordit.co/mSC038sskc.gif)
 
 ### Set account public/private and change password
-![hippo](http://g.recordit.co/nR7TNMwibk.gif)
+![gif](http://g.recordit.co/nR7TNMwibk.gif)
 
 ### Create post
-![hippo](http://g.recordit.co/Uij814Ek9u.gif)
+![gif](http://g.recordit.co/Uij814Ek9u.gif)
 
 ### Edit post
-![hippo](http://g.recordit.co/6Wys8aiyIQ.gif)
+![gif](http://g.recordit.co/6Wys8aiyIQ.gif)
 
 ### Delete post
-![hippo](http://g.recordit.co/7CoKoIja1y.gif)
+![gif](http://g.recordit.co/7CoKoIja1y.gif)
 
 ### Like post
-![hippo](http://g.recordit.co/ehPkH4K546.gif)
+![gif](http://g.recordit.co/ehPkH4K546.gif)
 
 ### Search user and subscribe to user
-![hippo](http://g.recordit.co/HxINnb3iFF.gif)
+![gif](http://g.recordit.co/HxINnb3iFF.gif)
 
 ### Read other user's posts
-![hippo](http://g.recordit.co/8KMmJSiOvF.gif)
+![gif](http://g.recordit.co/8KMmJSiOvF.gif)
 
 ### Sort posts using different methods
-![hippo](http://g.recordit.co/LQG2pGjED0.gif)
+![gif](http://g.recordit.co/LQG2pGjED0.gif)
