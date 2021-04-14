@@ -33,3 +33,12 @@
 
 ### Set account public/private and change password
 ![hippo](http://g.recordit.co/nR7TNMwibk.gif)
+
+### Create post
+![hippo](http://g.recordit.co/Uij814Ek9u.gif)
+
+### Edit post
+![hippo](http://g.recordit.co/6Wys8aiyIQ.gif)
+
+### Delete post
+![hippo](http://g.recordit.co/7CoKoIja1y.gif)
