@@ -1,6 +1,10 @@
 # PostAndLike
 👪💻 Mini social network
 
+## About
+The project was created to express and convey their thoughts and feelings through posts, as well as to maintain contact with the outside world. 
+You can register on the site, write posts, and look for new friends. Other people can follow you and read your posts(and like your posts if they like it).
+
 ## In the site you can:
 + [Register new account](#register-new-account)
 + [Log in to account](#log-in-to-account)
