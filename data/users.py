@@ -1,3 +1,5 @@
+"""Database user model"""
+
 import sqlalchemy
 from .db_session import SqlAlchemyBase
 from sqlalchemy import orm
@@ -8,37 +10,46 @@ from sqlalchemy_serializer import SerializerMixin
 subscriptions_list_table = sqlalchemy.Table(
     'subscriptions',
     SqlAlchemyBase.metadata,
-    sqlalchemy.Column('user_id', sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id')),
-    sqlalchemy.Column('subscription_id', sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id'))
+    sqlalchemy.Column('user_id', sqlalchemy.Integer,
+                      sqlalchemy.ForeignKey('users.id')),
+    sqlalchemy.Column('subscription_id', sqlalchemy.Integer,
+                      sqlalchemy.ForeignKey('users.id'))
 )
 
 requested_subscriptions_list_table = sqlalchemy.Table(
     'requested_subscriptions',
     SqlAlchemyBase.metadata,
-    sqlalchemy.Column('user_id', sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id')),
-    sqlalchemy.Column('requested_user_id', sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id'))
+    sqlalchemy.Column('user_id', sqlalchemy.Integer,
+                      sqlalchemy.ForeignKey('users.id')),
+    sqlalchemy.Column('requested_user_id', sqlalchemy.Integer,
+                      sqlalchemy.ForeignKey('users.id'))
 )
 
 subscribers_list_table = sqlalchemy.Table(
     'subscribers',
     SqlAlchemyBase.metadata,
-    sqlalchemy.Column('user_id', sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id')),
-    sqlalchemy.Column('subscriber_id', sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id'))
+    sqlalchemy.Column('user_id', sqlalchemy.Integer,
+                      sqlalchemy.ForeignKey('users.id')),
+    sqlalchemy.Column('subscriber_id', sqlalchemy.Integer,
+                      sqlalchemy.ForeignKey('users.id'))
 )
 
 requested_subscribers_list_table = sqlalchemy.Table(
     'requested_subscribers',
     SqlAlchemyBase.metadata,
-    sqlalchemy.Column('user_id', sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id')),
-    sqlalchemy.Column('subscriber_id', sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id'))
+    sqlalchemy.Column('user_id', sqlalchemy.Integer,
+                      sqlalchemy.ForeignKey('users.id')),
+    sqlalchemy.Column('subscriber_id', sqlalchemy.Integer,
+                      sqlalchemy.ForeignKey('users.id'))
 )
 
 
-# Класс модели пользователя
+# User database model class
 class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'users'
 
-    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True,
+                           autoincrement=True)
     login = sqlalchemy.Column(sqlalchemy.String)
     hashed_password = sqlalchemy.Column(sqlalchemy.String)
     registration_date = sqlalchemy.Column(sqlalchemy.DateTime)
@@ -58,7 +69,8 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
         'User',
         secondary=requested_subscriptions_list_table,
         primaryjoin=(requested_subscriptions_list_table.c.user_id == id),
-        secondaryjoin=(requested_subscriptions_list_table.c.requested_user_id == id),
+        secondaryjoin=(
+                requested_subscriptions_list_table.c.requested_user_id == id),
         lazy='dynamic'
     )
 

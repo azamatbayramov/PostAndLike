@@ -1,22 +1,26 @@
+"""Database post model"""
+
 from .db_session import SqlAlchemyBase
 from sqlalchemy_serializer import SerializerMixin
 import sqlalchemy
 from sqlalchemy import orm
 
-
 liked_users_table = sqlalchemy.Table(
     'liked_users_table',
     SqlAlchemyBase.metadata,
-    sqlalchemy.Column('users', sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id')),
-    sqlalchemy.Column('posts', sqlalchemy.Integer, sqlalchemy.ForeignKey('posts.id'))
+    sqlalchemy.Column('users', sqlalchemy.Integer,
+                      sqlalchemy.ForeignKey('users.id')),
+    sqlalchemy.Column('posts', sqlalchemy.Integer,
+                      sqlalchemy.ForeignKey('posts.id'))
 )
 
 
-# Класс модели поста
+# Post database model class
 class Post(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'posts'
 
-    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True,
+                           autoincrement=True)
     author_id = sqlalchemy.Column(sqlalchemy.Integer,
                                   sqlalchemy.ForeignKey("users.id"))
     author = orm.relation('User')
