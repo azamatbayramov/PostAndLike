@@ -1,5 +1,5 @@
 Flask
-Flask-Login=
+Flask-Login
 Flask-RESTful
 Flask-WTF
 Jinja2
