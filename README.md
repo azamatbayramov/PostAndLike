@@ -10,6 +10,7 @@ You can register on the site, write posts, and look for new friends. Other peopl
 + Flask
 + SQLite
 + SQLAlchemy
++ Bootstrap
 
 #### Supported languages
 + Russian
