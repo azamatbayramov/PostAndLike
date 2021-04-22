@@ -5,6 +5,12 @@
 The project was created to express and convey their thoughts and feelings through posts, as well as to maintain contact with the outside world. 
 You can register on the site, write posts, and look for new friends. Other people can follow you and read your posts(and like your posts if they like it).
 
+#### Used stack
++ Python 3
++ Flask
++ SQLite
++ SQLAlchemy
+
 #### Supported languages
 + Russian
 
